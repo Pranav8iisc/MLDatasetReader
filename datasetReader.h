@@ -8,10 +8,10 @@ using namespace std;
 
 class DatasetReader
 {
-	Public:
+	public:
 		
 		string fileName;	    
 		ifstream file;		
 	
-		void readDataset();		
+		void getDataset();		
 };
