@@ -1,4 +1,4 @@
-#include <ifstream>
+#include <fstream>
 #include <opencv/highgui.h>
 #include "idxDatasetReader.h"
 
