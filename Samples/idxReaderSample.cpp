@@ -15,7 +15,7 @@ int main()
 	cin >> fileName;
 
 	idxReader.getDataset(fileName);
-	idxReader.saveJPEG();'
+	idxReader.saveJPEG(0);
 
 	return 0;
 }
