@@ -60,7 +60,7 @@ unsigned int* idxDatasetReader::getSizeOfDimension()
 
 }
 
-void idxDatasetReader::getDataset(string inputFileName, unsigned nInputDatasets)
+void idxDatasetReader::getDataset(string inputFileName)
 {
 	filename = inputFileName;
 		
