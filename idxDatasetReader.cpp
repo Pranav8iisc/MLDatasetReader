@@ -60,10 +60,9 @@ unsigned int* idxDatasetReader::getSizeOfDimension()
 
 }
 
-void idxDatasetReader::getDataset(string inputFileName)
+void idxDatasetReader::getDataset()
 {
-	filename = inputFileName;
-		
+	
 	if(this->file.open(fileName) == NULL)
 		{
 			cout << "Invalid filename. Please ensure correct filename is specified";
@@ -188,7 +187,6 @@ void idxDatsetReader::saveJPEG(bool datasetType)
 	// save training images
 	if(nDimensions == 2)
 	{
-		char fileName[MAX_FILENAME_CHAR];	
 		unsigned int nPixels = sizeOfDimension[0] * sizeOfDimension[1];		
 		IplImage opencvImage = cvCreateImage(cvSize(sizeOfDimension[0], sizeOfDimension[1]), IPL_DEPTH_8U, 1);		
 		

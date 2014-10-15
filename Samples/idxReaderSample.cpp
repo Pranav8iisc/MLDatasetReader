@@ -9,12 +9,11 @@ using namespace std;
 int main()
 {
 	IdxDatasetReader idxReader;
-	string fileName;
 	
 	cout << "Please enter the filename";
-	cin >> fileName;
+	cin >> idxReader.fileName;
 
-	idxReader.getDataset(fileName);
+	idxReader.getDataset();
 	idxReader.saveJPEG(0);
 
 	return 0;

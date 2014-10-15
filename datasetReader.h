@@ -11,8 +11,7 @@ class DatasetReader
 	Public:
 		
 		string fileName;	    
-		ifstream file;
-		
+		ifstream file;		
 	
-		void readDataset(string);		
+		void readDataset();		
 };
