@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "../idxDatasetReader.h"
+#include "idxDatasetReader.h"
 
 
 using namespace std;
