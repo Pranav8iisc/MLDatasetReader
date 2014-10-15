@@ -15,10 +15,7 @@ class IdxDatasetReader : public DatasetReader
 		unsigned unsigned magicNumber;
 		unsigned int *sizeOfDimension; // variable sizes array containing size for each of nDimensions
 		unsigned int *data; // n X 1 vector where 'n' = nDatasets*nDimensions*PROD(i){sizeOfDimension_{i}}, stored in row-major order		
-				
-		void getDataset(string); 
-		
-		
+						
 	protected:
 	
 		unsigned int nDatasets;
