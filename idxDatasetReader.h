@@ -21,6 +21,7 @@ class IdxDatasetReader : public DatasetReader
 		
 	protected:
 	
+		unsigned int nDatasets;
 		unsigned int getMagicNumber();
 		char getDatatype();		
 		char getNumberOfDimensions();

@@ -93,7 +93,7 @@ void idxDatasetReader::getDataset(string inputFileName)
 	sizeOfDimension = getSizeOfDimension();	
 	
 	// size of dataset as implied by file header:
-	unsigned nDatasets = getNumberOfDatasets();
+	nDatasets = getNumberOfDatasets();
 	
 	unsigned predictedDatasetSize = nDatasets;
 	
@@ -188,7 +188,6 @@ void idxDatsetReader::saveJPEG(bool datasetType)
 	// save training images
 	if(nDimensions == 2)
 	{
-		unsigned nDatasets = getNumberOfDatasets();
 		char fileName[MAX_FILENAME_CHAR];	
 		unsigned int nPixels = sizeOfDimension[0] * sizeOfDimension[1];		
 		IplImage opencvImage = cvCreateImage(cvSize(sizeOfDimension[0], sizeOfDimension[1]), IPL_DEPTH_8U, 1);		
