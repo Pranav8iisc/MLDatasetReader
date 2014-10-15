@@ -1,3 +1,6 @@
 #1. Use XML file based input. Avoids recompilation of the program if input arguments are changed.
 
 #2. Add doxygen documentation.
+
+#3. Add dependencies section in README
+	#3.1 jpeglib.h
