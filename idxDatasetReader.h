@@ -25,5 +25,5 @@ class IdxDatasetReader : public DatasetReader
 		char getNumberOfDimensions();
 		unsigned int getNumberOfDatasets();
 		unsigned int* getSizeOfDimension();		
-	
+		bool isLittleEndian();
 };

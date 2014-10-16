@@ -1,53 +1,47 @@
+#include <iostream>
 #include <fstream>
 #include <opencv/highgui.h>
 #include "idxDatasetReader.h"
 
 using namespace std;
 
-idxDatasetReader::idxDatasetReader()
-{	
-	
-}
-
-~idxDatasetReader::idxDatasetReader()
-{
-	
-}
 
 // I suspect this is not portable :(
 // http://stackoverflow.com/questions/280162/is-there-a-way-to-do-a-c-style-compile-time-assertion-to-determine-machines-e
-bool idxDatasetReader::isLittleEndian()
+bool IdxDatasetReader::isLittleEndian()
 {
 	union {
 	char c[sizeof(int)];
 	int n;
-	} isLittle = 1;
+	} isLittle;
 	
-	if (isLittle[0] == 0x00)
+	isLittle.n = 1;
+	
+	if (isLittle.c[0] == 0x00)
 		return true;
 	else
 		return false;		
 }
 
-unsigned int idxDatasetReadr::getMagicNumber()
+unsigned int IdxDatasetReader::getMagicNumber()
 {
 	unsigned int tempMagicNumber;	
-	return (file >> tempMagicNumber);
+	return (this->file >> tempMagicNumber);
 }
 
 // returns extracted datatype id from the magic number
-char idxDatasetReader::getDatatype()
+char IdxDatasetReader::getDatatype()
 {
 	return (magicNumber >> 8) & 0xFF; // the second MSB
 }
 
 // returns the extracted number of dimensions from the magic number
-char idxDatasetReader::getNumberOfDimensions()
+char IdxDatasetReader::getNumberOfDimensions()
 {
 	return (magicNumber & 0xFF);
 }
 
-unsigned int idxDatasetReader::getNumberOfDatasets()
+unsigned int IdxDatasetReader::getNumberOfDatasets()
 {
 	unsigned int tempNumberOfDatasets;
 	file >> tempNumberOfDatasets;
@@ -55,12 +49,12 @@ unsigned int idxDatasetReader::getNumberOfDatasets()
 	return tempNumberOfDatasets;
 }
 
-unsigned int* idxDatasetReader::getSizeOfDimension()
+unsigned int* IdxDatasetReader::getSizeOfDimension()
 {
 
 }
 
-void idxDatasetReader::getDataset()
+void IdxDatasetReader::getDataset()
 {
 	
 	if(this->file.open(fileName) == NULL)
@@ -110,10 +104,10 @@ void idxDatasetReader::getDataset()
 			
 	// check if file contains number of bytes as implied by file header
 	if (hasValidFileSize == false)
-		{
-			cout << "Actual data < data size implied by the header :(";
-			exit(0);			
-		}
+	{
+		cout << "Actual data < data size implied by the header :(";
+		exit(0);			
+	}
 		
 	// read dataset
 	switch(datatypeId)
@@ -200,7 +194,7 @@ void idxDatsetReader::saveJPEG(bool datasetType)
 				for (unsigned i = 0; i < nPixels; i++)
 					opencvImage->ImageData[i] = data[imageId][i];	
 					
-				cvSaveImage(fileName, opencvImage);
+				cvSaveImage(this->fileName, opencvImage);
 			}
 	}
 	else
