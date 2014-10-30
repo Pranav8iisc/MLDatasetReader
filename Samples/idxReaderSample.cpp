@@ -44,29 +44,27 @@ int main()
 	{
 	
 		case 0x08:
-			IdxDatasetReader<unsigned char> idxReader;
+			IdxDatasetReader<unsigned char> idxReader(fileName, datasetType);
 			break;
 		case 0x09:
-			IdxDatasetReader<char> idxReader;
+			IdxDatasetReader<char> idxReader(fileName, datasetType);
 			break;
 		case 0x0B:
-			IdxDatasetReader<short> idxReader;
+			IdxDatasetReader<short> idxReader(fileName, datasetType);
 			break;
 		case 0x0C:
-			IdxDatasetReader<int> idxReader;
+			IdxDatasetReader<int> idxReader(fileName, datasetType);
 			break;
 		case 0x0D:
-			IdxDatasetReader<float> idxReader;
+			IdxDatasetReader<float> idxReader(fileName, datasetType);
 			break;
 		case 0x0E:
-			IdxDatasetReader<double> idxReader;
+			IdxDatasetReader<double> idxReader(fileName, datasetType);
 			break;
 		default:
-			cout << "Invalid dataset type specified :(";
-		
+			cout << "Invalid dataset type specified :(";		
 	}
 
-	idxReader.fileName = fileName;
 
 	idxReader.getDataset();
 
