@@ -16,17 +16,19 @@ unsigned int getMagicNumber(string fileName)
 	
 	file >> tempMagicNumber;
 
+	file.close();
+
 	return tempMagicNumber;
 }
 
 // returns extracted datatype id from the magic number
-unsigned char getDataType(std::string fileName)
+unsigned char getDatasetType(std::string fileName)
 {
 	unsigned char magicNumber = getMagicNumber(fileName);
 	return (magicNumber >> 8) & 0xFF; // the second MSB
 }
 
-// -------------main()-----------------------------//
+
 
 int main()
 {	
