@@ -15,21 +15,23 @@ class IdxDatasetReader : public DatasetReader
 		
 		unsigned int magicNumber;
 		unsigned int *sizeOfDimension; // variable sizes array containing size for each of nDimensions
-		DataType **data; // n X 1 vector where 'n' = nDatasets*nDimensions*PROD(i){sizeOfDimension_{i}}, stored in row-major order		
-		void saveJPEG(bool); // 0: training dataset, 1: test dataset
+	
+	 	void saveJPEG(bool); // 0: training dataset, 1: test dataset
 		void getDataset();					
-		
-		IdxDatasetReader(string fileName, unsigned char datasetType)
+	
+		IdxDatasetReader(string inputFileName, unsigned char inputDatasetType)
 		{
-			fileName = fileName;
-			datasetType = datasetType;
+			fileName = inputFileName;
+			datasetType = inputDatasetType;			
 		}
+			
 
 	protected:
 	
 		unsigned int nDatasets;
 		unsigned char nDimensions;	
 		unsigned char datasetType;
+		DataType **data;
 
 		unsigned int getMagicNumber();		
 		unsigned char getNumberOfDimensions();
