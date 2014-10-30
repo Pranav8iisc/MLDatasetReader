@@ -7,13 +7,6 @@
 using namespace std;
 
 
-IdxDatasetReader::IdxDatasetReader(string fileName, unsigned int magicNumber, unsigned char datasetType)
-{
-	fileName = fileName;
-	magicNumber = magicNumber;
-	datasetType = datasetType;
-}
-
 // I suspect this is not portable :(
 // http://stackoverflow.com/questions/280162/is-there-a-way-to-do-a-c-style-compile-time-assertion-to-determine-machines-e
 bool IdxDatasetReader::isLittleEndian()
@@ -31,12 +24,20 @@ bool IdxDatasetReader::isLittleEndian()
 		return false;		
 }
 
+unsigned int IdxDatasetReader::getMagicNumber()
+{
+	unsigned int tempMagicNumber;	
+	file >> tempMagicNumber;
+
+	return tempMagicNumber;
+}
+
+
 // returns the extracted number of dimensions from the magic number
 unsigned char IdxDatasetReader::getNumberOfDimensions()
 {
 	return (magicNumber & 0xFF);
 }
-
 
 unsigned int IdxDatasetReader::getNumberOfDatasets()
 {
@@ -46,12 +47,10 @@ unsigned int IdxDatasetReader::getNumberOfDatasets()
 	return tempNumberOfDatasets;
 }
 
-
 unsigned int* IdxDatasetReader::getSizeOfDimension()
 {
 
 }
-
 
 long int getFileSize(std::string filename)
 {
@@ -59,6 +58,7 @@ long int getFileSize(std::string filename)
     int rc = stat(filename.c_str(), &stat_buf);
     return rc == 0 ? stat_buf.st_size : -1;
 }
+
 
 
 void IdxDatasetReader::getDataset()
