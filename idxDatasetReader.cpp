@@ -7,13 +7,6 @@
 using namespace std;
 
 
-IdxDatasetReader::IdxDatasetReader(string fileName, unsigned int magicNumber, unsigned char datasetType)
-{
-	fileName = fileName;
-	magicNumber = magicNumber;
-	datasetType = datasetType;
-}
-
 // I suspect this is not portable :(
 // http://stackoverflow.com/questions/280162/is-there-a-way-to-do-a-c-style-compile-time-assertion-to-determine-machines-e
 bool IdxDatasetReader::isLittleEndian()
@@ -38,6 +31,7 @@ unsigned char IdxDatasetReader::getNumberOfDimensions()
 }
 
 
+// returns number of datsets
 unsigned int IdxDatasetReader::getNumberOfDatasets()
 {
 	unsigned int tempNumberOfDatasets;
@@ -47,12 +41,16 @@ unsigned int IdxDatasetReader::getNumberOfDatasets()
 }
 
 
+// returns size of each dimension
 unsigned int* IdxDatasetReader::getSizeOfDimension()
-{
-
+{	
+	unsigned int *size = new unsigned int[nDimensions];
+	for (unsigned int i = 0; i < nDimensions; i++)
+		file >> size[i];
+	return size;
 }
 
-
+// returns acutal filesize 
 long int getFileSize(std::string filename)
 {
     struct stat stat_buf;
@@ -61,6 +59,21 @@ long int getFileSize(std::string filename)
 }
 
 
+// extracts magic number from the idx file
+unsigned int getMagicNumber(string fileName)
+{
+        unsigned int tempMagicNumber;
+
+        ifstream file(fileName, ios::read|ios::binary);
+        
+        file >> tempMagicNumber;
+
+        file.close();
+
+        return tempMagicNumber;
+}
+
+// extracts dataset from the input file
 void IdxDatasetReader::getDataset()
 {
 	
@@ -77,10 +90,7 @@ void IdxDatasetReader::getDataset()
 			magicNumber = __builtin_bswap32(magicNumber);
 		}
 	
-	// get datatype
-	unsigned char datatypeId; 
-	datatypeId = getDatatype();
-	
+
 	// get number of dimensions
 	nDimensions = getNumberOfDimensions();
 		
@@ -114,7 +124,7 @@ void IdxDatasetReader::getDataset()
 	}
 		
 	// read dataset
-	switch(datatypeId)
+	switch(datasetType)
 	{
 		case 0x08:		
 
@@ -189,7 +199,7 @@ void IdxDatasetReader::getDataset()
 }
 
 
-// saves dataset in JPEG form
+// saves dataset in JPEG form(Debugging purpose)
 void IdxDatsetReader::saveJPEG(bool datasetType)
 {
 	// save training images

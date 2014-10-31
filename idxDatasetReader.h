@@ -17,8 +17,7 @@ class IdxDatasetReader : public DatasetReader
 		unsigned int *sizeOfDimension; // variable sizes array containing size for each of nDimensions
 	
 	 	void saveJPEG(bool); // 0: training dataset, 1: test dataset
-		void getDataset();					
-	
+		
 		IdxDatasetReader(string inputFileName, unsigned char inputDatasetType)
 		{
 			fileName = inputFileName;
