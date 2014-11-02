@@ -24,7 +24,7 @@ class IdxDatasetReader : public DatasetReader
 			datasetType = inputDatasetType;			
 		}
 			
-
+		void getDataset();
 	protected:
 	
 		unsigned int nDatasets;
@@ -33,6 +33,7 @@ class IdxDatasetReader : public DatasetReader
 		DataType **data;
 
 		unsigned int getMagicNumber();		
+		long int getFileSize();
 		unsigned char getNumberOfDimensions();
 		unsigned int getNumberOfDatasets();
 		unsigned int* getSizeOfDimension();		

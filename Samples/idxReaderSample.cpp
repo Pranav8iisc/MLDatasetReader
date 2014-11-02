@@ -12,7 +12,8 @@ unsigned int getMagicNumber(string fileName)
 {
 	unsigned int tempMagicNumber;	
 	
-	ifstream file(fileName, ios::read|ios::binary);
+	ifstream file;
+	file.open(fileName.c_str(), ios::in|ios::binary);
 	
 	file >> tempMagicNumber;
 
@@ -44,31 +45,51 @@ int main()
 	{
 	
 		case 0x08:
-			IdxDatasetReader<unsigned char> idxReader(fileName, datasetType);
+			{
+				IdxDatasetReader<unsigned char> idxReader(fileName, datasetType);
+				idxReader.getDataset();
+				idxReader.saveJPEG(0);
+			}
 			break;
 		case 0x09:
-			IdxDatasetReader<char> idxReader(fileName, datasetType);
+			{
+				IdxDatasetReader<char> idxReader(fileName, datasetType);
+				idxReader.getDataset();
+				idxReader.saveJPEG(0);
+			}
 			break;
 		case 0x0B:
-			IdxDatasetReader<short> idxReader(fileName, datasetType);
+			{
+				IdxDatasetReader<short> idxReader(fileName, datasetType);
+				idxReader.getDataset();
+				idxReader.saveJPEG(0);
+			}
 			break;
 		case 0x0C:
-			IdxDatasetReader<int> idxReader(fileName, datasetType);
+			{
+				IdxDatasetReader<int> idxReader(fileName, datasetType);
+				idxReader.getDataset();
+				idxReader.saveJPEG(0);
+			}
 			break;
 		case 0x0D:
-			IdxDatasetReader<float> idxReader(fileName, datasetType);
+			{
+				IdxDatasetReader<float> idxReader(fileName, datasetType);
+				idxReader.getDataset();
+				idxReader.saveJPEG(0);
+			}
 			break;
 		case 0x0E:
-			IdxDatasetReader<double> idxReader(fileName, datasetType);
+			{
+				IdxDatasetReader<double> idxReader(fileName, datasetType);
+				idxReader.getDataset();
+				idxReader.saveJPEG(0);
+			}
 			break;
 		default:
 			cout << "Invalid dataset type specified :(";		
 	}
 
-
-	idxReader.getDataset();
-
-	idxReader.saveJPEG(0);
 
 	return 0;
 }
