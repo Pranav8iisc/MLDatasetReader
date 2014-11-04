@@ -96,7 +96,7 @@ unsigned int* IdxDatasetReader<DatasetType>::getSizeOfDimension()
 	return size;
 }
 
-// returns acutal filesize 
+// returns actual filesize 
 template<class DatasetType>
 long int IdxDatasetReader<DatasetType>::getFileSize()
 {
@@ -144,9 +144,13 @@ void IdxDatasetReader<DatasetType>::getDataset()
 	// size of dataset as implied by file header:
 	//nDatasets = getNumberOfDatasets();
 	nDatasets = sizeOfDimension[0];
-       cout << "\nNumber of datasets are:" << nDatasets;
-	cout << "\nNumber of rows:" << sizeOfDimension[1];
-	cout << "\nNumber of columns:" << sizeOfDimension[2];
+       	cout << "\nNumber of datasets are:" << nDatasets;
+
+	if (nDimensions == 3)
+	{
+		cout << "\nNumber of rows:" << sizeOfDimension[1];
+		cout << "\nNumber of columns:" << sizeOfDimension[2];
+	}
 
 	unsigned int predictedDatasetSize = nDatasets;
 	
@@ -156,24 +160,17 @@ void IdxDatasetReader<DatasetType>::getDataset()
 	unsigned int actualDatasetSize;
 
 	long fileSize = getFileSize();
-	
-	if (nDimensions > 1)
-		actualDatasetSize = fileSize - sizeof(unsigned int) * (nDimensions + 2); // 1: magic number + 1: number of datasets	
-	else
-		actualDatasetSize = fileSize - sizeof(unsigned int) * (nDimensions + 1); // 1:magic number
-		
-	bool hasValidFileSize = (predictedDatasetSize == actualDatasetSize) ? true : false;
-			
-	// check if file contains number of bytes as implied by file header
-	if (hasValidFileSize == false)
-	{
-		cout << "\nActual data < data size implied by the header :(";
-//		exit(0);			
-	}
-
 
 	data = new DatasetType*[nDatasets];
-	actualDatasetSize = sizeOfDimension[1]*sizeOfDimension[2];
+	
+	if (nDimensions == 1)
+		actualDatasetSize = sizeOfDimension[0];
+	else
+		for (unsigned int i = 1; i < nDimensions; i++)
+			actualDatasetSize *= sizeOfDimension[i];
+
+//	actualDatasetSize = sizeOfDimension[1]*sizeOfDimension[2];
+
 	for (unsigned int d = 0; d < nDatasets; d++)
 		data[d] = new DatasetType[actualDatasetSize];
 		
