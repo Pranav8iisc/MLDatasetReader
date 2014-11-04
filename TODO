@@ -6,3 +6,5 @@
 	#3.1 jpeglib.h
 
 #4. Is there a way to define type of a data member in the class itself?
+
+#5. Current code works only for MNIST dataset. Generalize IdxDatasetReader class. 
