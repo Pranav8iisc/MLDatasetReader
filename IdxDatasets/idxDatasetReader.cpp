@@ -163,12 +163,16 @@ void IdxDatasetReader<DatasetType>::getDataset()
 
 	data = new DatasetType*[nDatasets];
 	
+
+
 	if (nDimensions == 1)
 		actualDatasetSize = sizeOfDimension[0];
 	else
+	{	
+		actualDatasetSize = 1;
 		for (unsigned int i = 1; i < nDimensions; i++)
 			actualDatasetSize *= sizeOfDimension[i];
-
+	}
 //	actualDatasetSize = sizeOfDimension[1]*sizeOfDimension[2];
 
 	for (unsigned int d = 0; d < nDatasets; d++)
