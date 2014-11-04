@@ -7,6 +7,21 @@
 using namespace std;
 
 
+
+
+
+unsigned int reverseInt (unsigned int i)
+{
+    unsigned char c1, c2, c3, c4;
+
+    c1 = i & 255;
+    c2 = (i >> 8) & 255;
+    c3 = (i >> 16) & 255;
+    c4 = (i >> 24) & 255;
+
+    return ((unsigned int)c1 << 24) + ((unsigned int)c2 << 16) + ((unsigned int)c3 << 8) + c4;
+}
+
 // I suspect this is not portable :(
 // http://stackoverflow.com/questions/280162/is-there-a-way-to-do-a-c-style-compile-time-assertion-to-determine-machines-e
 template<class DatasetType>
@@ -29,7 +44,10 @@ bool IdxDatasetReader<DatasetType>::isLittleEndian()
 template<class DatasetType>
 unsigned char IdxDatasetReader<DatasetType>::getNumberOfDimensions()
 {
-	return (magicNumber & 0xFF);
+	cout << "\nMagic number is:" << magicNumber;
+	unsigned char tempNDimensions = (magicNumber & 0xFF);
+	cout << "\nNumber of dimensions are:" << (unsigned int)tempNDimensions;
+	return tempNDimensions;
 }
 
 
@@ -38,8 +56,16 @@ template<class DatasetType>
 unsigned int IdxDatasetReader<DatasetType>::getNumberOfDatasets()
 {
 	unsigned int tempNumberOfDatasets;
-	file >> tempNumberOfDatasets;
+	file.read((char*)&tempNumberOfDatasets, sizeof(tempNumberOfDatasets));
 	
+//	bool isLittleEndianTrue = false;
+
+//	if (isLittleEndian() == true)
+//	{
+//		isLittleEndianTrue = true;
+		tempNumberOfDatasets = reverseInt(tempNumberOfDatasets);
+///	}
+
 	return tempNumberOfDatasets;
 }
 
@@ -48,9 +74,25 @@ unsigned int IdxDatasetReader<DatasetType>::getNumberOfDatasets()
 template<class DatasetType>
 unsigned int* IdxDatasetReader<DatasetType>::getSizeOfDimension()
 {	
+  //     bool isLittleEndianTrue = false;
+
+//	if (isLittleEndian() == true)
+//		isLittleEndianTrue = true;		
+	
+
 	unsigned int *size = new unsigned int[nDimensions];
-	for (unsigned int i = 0; i < nDimensions; i++)
-		file >> size[i];
+	
+//	if (isLittleEndianTrue)
+		for (unsigned int i = 0; i < nDimensions; i++)
+		{
+			file.read((char*)&size[i], sizeof(size[i]));
+			size[i] = reverseInt(size[i]);
+		}
+
+//	else
+//		for (unsigned int i = 0; i < nDimensions; i++)
+//			file.read((char*)&size[i], sizeof(size[i]));
+		
 	return size;
 }
 
@@ -69,8 +111,16 @@ template<class DatasetType>
 unsigned int IdxDatasetReader<DatasetType>::getMagicNumber()
 {
         unsigned int tempMagicNumber;
-	file >> tempMagicNumber;
-	
+	file.read((char*)&tempMagicNumber, sizeof(tempMagicNumber));
+
+//	bool isLittleEndianTrue = false;
+
+//	if (isLittleEndian() == true)
+//	{
+//		isLittleEndianTrue = true;
+		tempMagicNumber = reverseInt(tempMagicNumber);
+//	}
+
 	return tempMagicNumber;
 }
 
@@ -84,24 +134,20 @@ void IdxDatasetReader<DatasetType>::getDataset()
 	//extract magic number
 	magicNumber = getMagicNumber();
 	
-	bool isLittleEndianTrue;
-		
-	if (isLittleEndian() == true)
-		{
-			isLittleEndianTrue = true;
-			magicNumber = __builtin_bswap32(magicNumber);
-		}
-	
-
 	// get number of dimensions
 	nDimensions = getNumberOfDimensions();
-		
+	cout << "\nNumber of dimensions:" <<(unsigned int) nDimensions;	
+	
 	// get size of dimensions
 	sizeOfDimension = getSizeOfDimension();	
 	
 	// size of dataset as implied by file header:
-	nDatasets = getNumberOfDatasets();
-	
+	//nDatasets = getNumberOfDatasets();
+	nDatasets = sizeOfDimension[0];
+       cout << "\nNumber of datasets are:" << nDatasets;
+	cout << "\nNumber of rows:" << sizeOfDimension[1];
+	cout << "\nNumber of columns:" << sizeOfDimension[2];
+
 	unsigned int predictedDatasetSize = nDatasets;
 	
 	for (unsigned int i = 0; i < nDimensions; i++)
@@ -121,22 +167,27 @@ void IdxDatasetReader<DatasetType>::getDataset()
 	// check if file contains number of bytes as implied by file header
 	if (hasValidFileSize == false)
 	{
-		cout << "Actual data < data size implied by the header :(";
-		exit(0);			
+		cout << "\nActual data < data size implied by the header :(";
+//		exit(0);			
 	}
 
 
 	data = new DatasetType*[nDatasets];
+	actualDatasetSize = sizeOfDimension[1]*sizeOfDimension[2];
 	for (unsigned int d = 0; d < nDatasets; d++)
 		data[d] = new DatasetType[actualDatasetSize];
-	
+		
 
 	for (unsigned datasetId = 0; datasetId < nDatasets; datasetId++)
 		for (unsigned int byteId = 0; byteId < actualDatasetSize; byteId++)
 			{
-				file >> data[datasetId][byteId];
+				file.read((char*)&data[datasetId][byteId], sizeof(data[datasetId][byteId]));
 				switch(datasetType)
 				{
+					case 0x08:
+					case 0x09:
+					break;
+
 					case 0x0B:
 					data[datasetId][byteId] = __builtin_bswap16(data[datasetId][byteId]);
 					break;
@@ -161,27 +212,32 @@ void IdxDatasetReader<DatasetType>::getDataset()
 template<class DatasetType>
 void IdxDatasetReader<DatasetType>::saveJPEG(bool datasetType)
 {
+
+	char files[500];
+
 	// save training images
-	if(nDimensions == 2)
+	if(nDimensions == 3)
 	{
-		unsigned int nPixels = sizeOfDimension[0] * sizeOfDimension[1];		
-		IplImage *opencvImage = cvCreateImage(cvSize(sizeOfDimension[0], sizeOfDimension[1]), IPL_DEPTH_8U, 1);		
+		unsigned int nPixels = sizeOfDimension[1] * sizeOfDimension[2];		
+		IplImage *opencvImage = cvCreateImage(cvSize(sizeOfDimension[1], sizeOfDimension[2]), IPL_DEPTH_8U, 1);		
 		
+		cout << "\nNumber of datasets:" << nDatasets;
 		for (unsigned int imageId = 0; imageId < nDatasets; imageId++)
 			{
-				if (datasetType == 0)
-					sprintf((char*)fileName.c_str(), "MNISTDataset/trainImages/%i.jpg", imageId);
-				else
-					sprintf((char*)fileName.c_str(), "MNISTDataset/testImages/%i.jpg", imageId);
+				//if (datasetType == 0)
+				//	sprintf((char*)fileName.c_str(), "MNIST/trainImages/%i.jpg", imageId);
+				//else
+					sprintf(files, "MNIST/testImages/%d.jpg", imageId);
 				
 				for (unsigned int i = 0; i < nPixels; i++)
 					opencvImage->imageData[i] = data[imageId][i];	
 					
-				cvSaveImage((char*)this->fileName.c_str(), opencvImage);
+				cvSaveImage(files, opencvImage);
 			}
+		cout << "\nDONE!!";
 	}
 	else
-	cout << "Sorry, not a image dataset :(";
+	cout << "\nSorry, not a image dataset :(";
 }
 
 

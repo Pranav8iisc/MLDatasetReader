@@ -3,7 +3,7 @@ Specializes DatasetReader class for Idx files defined here(see at the bottom):
 http://yann.lecun.com/exdb/mnist/
 */
 
-#include "datasetReader.h"
+#include "../datasetReader.h"
 #include <string>
 
 using namespace std;
