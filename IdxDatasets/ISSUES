@@ -1,2 +1,0 @@
-#1. using gcc builtin functions like: __builtin_bswap16 requires atleast gcc 4.8
-
